@@ -5,6 +5,8 @@
 #include <float.h>
 #include <ctype.h>
 #include <time.h>
+#include <pthread.h>
+#include <stdbool.h>
 #include "mem.h"
 #include "defs.h"
 #include "buffer.h"
@@ -13,6 +15,17 @@
 #include "bitio.h"
 #include "arith.h"
 #include "arith_aux.h"
+
+
+//////////////////////////////////////////////////////////////////////////////
+//---------------------CPU usage ------------------------------------------//
+
+int peak_usage;
+int avg_usage;
+
+extern void* monitor_cpu_usage(void* arg);
+
+volatile bool keep_running = true;
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - D E C O M P R E S S O R - - - - - - - - - - - -
@@ -330,6 +343,17 @@ int32_t main(int argc, char *argv[]){
   uint8_t     help, verbose, force, nTar = 1;
   clock_t     stop = 0, start = clock();
   
+  ////////////////////////////////////////////////////////////////////////////
+  ///////////-----------C P U USAGE ---------------------------------------//
+
+  pthread_t monitor_thread;
+
+  // Create a thread to monitor CPU usage
+  pthread_create(&monitor_thread, NULL, monitor_cpu_usage, NULL);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ///////////-----------C P U USAGE ---------------------------------------// 
+
   if((help = ArgsState(DEFAULT_HELP, p, argc, "-h")) == 1 || argc < 2){
     fprintf(stderr,
     "Usage: GeDe [OPTION]... -r [FILE]  [FILE]:[...]                    \n"
@@ -436,6 +460,17 @@ int32_t main(int argc, char *argv[]){
 
   stop = clock();
   fprintf(stderr, "Spent %g sec.\n", ((double)(stop-start))/CLOCKS_PER_SEC);
+
+  ///////////////////////////////
+  ///// CPU USAGE END ///////////
+  keep_running = false;
+
+  // Wait for the monitoring thread to finish
+  pthread_join(monitor_thread, NULL);
+
+  printf("\nAvg CPU Usage: %d\n", avg_usage);
+
+  //////////////////////////////
 
   return EXIT_SUCCESS;
   }

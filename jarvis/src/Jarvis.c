@@ -14,6 +14,8 @@
 #include <time.h>
 #include <malloc.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <stdbool.h>
 
 #include "defs.h"
 #include "common.h"
@@ -30,6 +32,21 @@
 #include "bitio.h"
 #include "arith.h"
 #include "arith_aux.h"
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//---------------------CPU usage ------------------------------------------//
+
+int peak_usage;
+int avg_usage;
+
+extern void* monitor_cpu_usage(void* arg);
+
+volatile bool keep_running = true;
+
+//////////////////////////////////////////////////////////////////////////////
+// - - - - - - - - - - - - - - D E C O M P R E S S O R - - - - - - - - - - - -
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // ENCODE HEADER
@@ -511,6 +528,17 @@ int main(int argc, char **argv){
   int32_t    n, k, xargc = 0;
   PARAM      *P;
   clock_t    stop = 0, start = clock();
+
+  ////////////////////////////////////////////////////////////////////////////
+  ///////////-----------C P U USAGE ---------------------------------------//
+
+  pthread_t monitor_thread;
+
+  // Create a thread to monitor CPU usage
+  pthread_create(&monitor_thread, NULL, monitor_cpu_usage, NULL);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ///////////-----------C P U USAGE ---------------------------------------// 
   
   P = (PARAM *) Calloc(1, sizeof(PARAM));
 
@@ -618,6 +646,18 @@ int main(int argc, char **argv){
     CLOCKS_PER_SEC); 
 
   fprintf(stderr, "Done!                        \n");  // SPACES ARE VALID!
+  
+  ///////////////////////////////
+  ///// CPU USAGE END ///////////
+  keep_running = false;
+
+  // Wait for the monitoring thread to finish
+  pthread_join(monitor_thread, NULL);
+
+  printf("\nAvg CPU Usage: %d%%\n", avg_usage);
+
+  //////////////////////////////
+  
   return 0;
   }
 
