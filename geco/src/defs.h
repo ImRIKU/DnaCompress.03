@@ -63,7 +63,7 @@ typedef struct{
   }
 Parameters;
 
-U32 garbage;
+extern U32 garbage;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

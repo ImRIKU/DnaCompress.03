@@ -13,6 +13,8 @@
 
 float *logTable;
 
+U32 garbage;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 uint32_t FLog2(uint64_t i)

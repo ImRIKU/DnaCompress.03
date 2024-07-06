@@ -60,7 +60,7 @@ typedef struct{
   }
 PARAM;
 
-uint32_t garbage;
+extern uint32_t garbage;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -8,6 +8,8 @@
 // Pow function from http://martin.ankerl.com/2007/10/04/
 // optimized-pow-approximation-for-java-and-c-c/
 
+uint32_t garbage;
+
 double Power (double base, double exponent)
   {
   union
