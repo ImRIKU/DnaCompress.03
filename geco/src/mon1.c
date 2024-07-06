@@ -95,7 +95,7 @@ void get_process_info(const char* process_name) {
 void* monitor_cpu_usage(void* arg) {
     iniArr();
 
-    const char* process_name = "./GeCo2"; // The name of the current executable
+    const char* process_name = "./GeCo"; // The name of the current executable
     get_process_info(process_name);
     return NULL;
 }
