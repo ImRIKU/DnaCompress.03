@@ -7,6 +7,7 @@
 extern volatile bool keep_running;
 extern int peak_usage;
 extern int avg_usage;
+extern int ram_usage;
 
 int arr[60];
 int i,count=0;
@@ -82,6 +83,33 @@ void get_process_info(const char* process_name) {
         } 
         else {
             printf("Failed to retrieve CPU usage\n");
+        }
+
+        pclose(fp);
+
+        /////////////////////////////////////////////////////
+        //////////////////// RAM usage  ////////////////////
+
+        snprintf(cmd, sizeof(cmd), "ps -p %s -o rss", pid);
+
+        fp = popen(cmd, "r");
+        if (fp == NULL) {
+            perror("popen failed");
+            return;
+        }
+        
+        // Skip the header line
+        if (fgets(buffer, sizeof(buffer), fp) == NULL) {
+            printf("Failed to retrieve RAM usage\n");
+            pclose(fp);
+            return;
+        }
+
+        // Get the RAM usage
+        if (fgets(buffer, sizeof(buffer), fp) != NULL) {
+            int ram_usage = atoi(buffer);
+        } else {
+            printf("Failed to retrieve RAM usage\n");
         }
 
         pclose(fp);

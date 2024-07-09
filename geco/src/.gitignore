@@ -3,6 +3,5 @@ CMakeCache.txt
 cmake_install.cmake
 GeCo
 GeDe
-Makefile.linux
 Makefile
 CMakeLists.txt

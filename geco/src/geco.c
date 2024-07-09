@@ -24,6 +24,7 @@
 
 int peak_usage;
 int avg_usage;
+int ram_usage;
 
 extern void* monitor_cpu_usage(void* arg);
 
@@ -554,6 +555,7 @@ int32_t main(int argc, char *argv[]){
   pthread_join(monitor_thread, NULL);
 
   printf("\nAvg CPU Usage: %d\n", avg_usage);
+  printf("Ram Usage: %d\n", ram_usage);
 
   //////////////////////////////
 
