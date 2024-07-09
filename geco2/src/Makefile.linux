@@ -17,9 +17,9 @@ all:
 	$(MAKE) progs
 progs: $(PROGS)
 $(BIN)/GeCo2: geco2.c $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -o $(BIN)/GeCo2 geco2.c $(OBJS) $(LIBS)
+	$(CC) $(CFLAGS) -o $(BIN)/GeCo2 geco2.c mon1.c $(OBJS) $(LIBS)
 $(BIN)/GeDe2: gede2.c $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -o $(BIN)/GeDe2 gede2.c $(OBJS) $(LIBS)
+	$(CC) $(CFLAGS) -o $(BIN)/GeDe2 gede2.c mon2.c $(OBJS) $(LIBS)
 mem.o: mem.c mem.h $(DEPS)
 	$(CC) -c $(CFLAGS) mem.c
 msg.o: msg.c msg.h $(DEPS)
