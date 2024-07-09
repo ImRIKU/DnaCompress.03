@@ -3,7 +3,6 @@ CMakeCache.txt
 cmake_install.cmake
 GeCo2
 GeDe2
-Makefile.linux
 Makefile
 CMakeLists.txt
 run.sh
