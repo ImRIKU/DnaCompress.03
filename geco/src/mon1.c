@@ -89,7 +89,7 @@ void get_process_info(const char* process_name) {
 
         ////////////////////////////////////////////////////////// RAM usage
         /////////////////////////////////////////////////////////
-        
+
         snprintf(cmd, sizeof(cmd), "ps -p %s -o rss", pid);
 
         fp = popen(cmd, "r");
@@ -107,6 +107,7 @@ void get_process_info(const char* process_name) {
 
         // Get the RAM usage
         if (fgets(buffer, sizeof(buffer), fp) != NULL) {
+            printf("%s", buffer);
             int ram_usage = atoi(buffer);
         } else {
             printf("Failed to retrieve RAM usage\n");
