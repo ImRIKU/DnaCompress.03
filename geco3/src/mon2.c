@@ -4,9 +4,11 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+
 extern volatile bool keep_running;
 extern int peak_usage;
 extern int avg_usage;
+extern unsigned long mem_total, mem_free;
 
 int arr[60];
 int i,count=0;
@@ -28,6 +30,29 @@ void setUsage(){
     avg_usage = sum/count;
     peak_usage = max;
 }
+
+////////////////////
+
+void get_memory_usage(unsigned long* total, unsigned long* free) {
+    FILE* file = fopen("/proc/meminfo", "r");
+    if (!file) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), file)) {
+        if (sscanf(buffer, "MemTotal: %lu kB", total) == 1 ||
+            sscanf(buffer, "MemFree: %lu kB", free) == 1) {
+            // Do nothing, just parsing
+        }
+    }
+
+    fclose(file);
+}
+    
+
+////////////////////
 
 
 
@@ -85,6 +110,11 @@ void get_process_info(const char* process_name) {
         }
 
         pclose(fp);
+
+        ////////////////////////////////////////////
+        //////// MEMORY USAGE /////////////////////
+        get_memory_usage(&mem_total, &mem_free);
+        ///////////////////////////////////////////
 
         // Sleep for a while before checking again
         sleep(1);

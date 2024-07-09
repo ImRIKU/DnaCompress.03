@@ -5,3 +5,4 @@ GeCo3
 GeDe3
 *.o
 CMakeLists.txt
+run.sh
