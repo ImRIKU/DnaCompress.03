@@ -40,6 +40,7 @@
 
 int peak_usage;
 int avg_usage;
+unsigned long mem_total, mem_free, mem_used;
 
 extern void* monitor_cpu_usage(void* arg);
 
@@ -656,6 +657,11 @@ int main(int argc, char **argv){
 
   printf("\nAvg CPU Usage: %d%%\n", avg_usage);
 
+  //////////////////////////////
+
+    ///////////////////////////////
+  mem_used = mem_total - mem_free;
+  printf("Memory Usage: %lu kB used out of %lu kB\n", mem_used, mem_total);
   //////////////////////////////
   
   return 0;
