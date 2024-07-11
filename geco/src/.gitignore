@@ -6,3 +6,4 @@ GeDe
 Makefile
 CMakeLists.txt
 run.sh
+*.o
