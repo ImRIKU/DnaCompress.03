@@ -20,6 +20,11 @@ void iniArr(){
 }
 
 void setUsage(){
+    if(count == 0){
+        avg_usage = 0;
+        peak_usage = 0;
+        return;
+    }
     int sum=0,max=arr[0];
     for(i=0;i<60;i++){
         sum+=arr[i];
