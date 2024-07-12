@@ -7,7 +7,7 @@ CPLP   = -ffast-math -msse2
 #-----------------------------------------------------------------------------
 CFLAGS = -O3 -Wall $(CPLP) -DPROGRESS
 #-----------------------------------------------------------------------------
-LIBS   = -lm
+LIBS   = -lm -pthread
 DEPS   = defs.h
 PROGS  = $(BIN)/JARVIS
 OBJS   = bitio.o arith.o arith_aux.o levels.o common.o msg.o mem.o dna.o \

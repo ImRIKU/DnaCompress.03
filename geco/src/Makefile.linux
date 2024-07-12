@@ -7,7 +7,7 @@ CPLP   =
 #-----------------------------------------------------------------------------
 CFLAGS = -O3 -Wall $(CPLP)
 #-----------------------------------------------------------------------------
-LIBS   = -lm
+LIBS   = -lm -pthread
 DEPS   = defs.h
 PROGS  = $(BIN)/GeCo $(BIN)/GeDe
 OBJS   = mem.o msg.o common.o buffer.o levels.o context.o bitio.o arith.o \

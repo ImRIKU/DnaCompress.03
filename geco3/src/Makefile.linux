@@ -7,7 +7,7 @@ CPLP   =
 #-----------------------------------------------------------------------------
 CFLAGS = -Wall -Ofast -march=native -mtune=native $(CPLP)
 #-----------------------------------------------------------------------------
-LIBS   = -lm
+LIBS   = -lm -pthread
 DEPS   = defs.h
 PROGS  = $(BIN)/GeCo3 $(BIN)/GeDe3
 OBJS   = mem.o msg.o common.o buffer.o levels.o pmodels.o context.o bitio.o \

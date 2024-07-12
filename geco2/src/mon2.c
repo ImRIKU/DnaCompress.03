@@ -39,8 +39,8 @@ void get_process_info(const char* process_name) {
     char pid[16];
 
     // Step 1: Find the PID of the process
-    //snprintf(cmd, sizeof(cmd), "ps aux | grep -w \"%s\" | grep -v grep | awk '{print $2}' | head -n 1", process_name);      //works flawlessly
-    snprintf(cmd, sizeof(cmd), "ps -eo pid,args | grep -w \"%s\" | grep -v grep | awk '{print $1}' | head -n 1", process_name); //works flawlessly
+    snprintf(cmd, sizeof(cmd), "pgrep -f \"%s\"", process_name);
+    //snprintf(cmd, sizeof(cmd), "ps -eo pid,args | grep -w \"%s\" | grep -v grep | awk '{print $1}' | head -n 1", process_name); //works flawlessly
 
     fp = popen(cmd, "r");
     if (fp == NULL) {
