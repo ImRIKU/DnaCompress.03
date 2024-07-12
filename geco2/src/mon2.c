@@ -8,7 +8,6 @@
 extern volatile bool keep_running;
 extern int peak_usage;
 extern int avg_usage;
-extern unsigned long mem_total, mem_free;
 
 int arr[60];
 int i,count=0;
@@ -31,29 +30,6 @@ void setUsage(){
     peak_usage = max;
 }
 
-////////////////////
-
-void get_memory_usage(unsigned long* total, unsigned long* free) {
-    FILE* file = fopen("/proc/meminfo", "r");
-    if (!file) {
-        perror("fopen");
-        exit(EXIT_FAILURE);
-    }
-
-    char buffer[256];
-    while (fgets(buffer, sizeof(buffer), file)) {
-        if (sscanf(buffer, "MemTotal: %lu kB", total) == 1 ||
-            sscanf(buffer, "MemFree: %lu kB", free) == 1) {
-            // Do nothing, just parsing
-        }
-    }
-
-    fclose(file);
-}
-    
-
-////////////////////
-
 
 
 void get_process_info(const char* process_name) {
@@ -63,7 +39,9 @@ void get_process_info(const char* process_name) {
     char pid[16];
 
     // Step 1: Find the PID of the process
-    snprintf(cmd, sizeof(cmd), "pgrep -f \"%s\"", process_name);
+    //snprintf(cmd, sizeof(cmd), "ps aux | grep -w \"%s\" | grep -v grep | awk '{print $2}' | head -n 1", process_name);      //works flawlessly
+    snprintf(cmd, sizeof(cmd), "ps -eo pid,args | grep -w \"%s\" | grep -v grep | awk '{print $1}' | head -n 1", process_name); //works flawlessly
+
     fp = popen(cmd, "r");
     if (fp == NULL) {
         perror("popen failed");
@@ -112,9 +90,6 @@ void get_process_info(const char* process_name) {
         pclose(fp);
 
         ////////////////////////////////////////////
-        //////// MEMORY USAGE /////////////////////
-        get_memory_usage(&mem_total, &mem_free);
-        ///////////////////////////////////////////
 
         // Sleep for a while before checking again
         sleep(1);

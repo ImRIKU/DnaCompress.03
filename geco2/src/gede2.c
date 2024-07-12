@@ -23,11 +23,32 @@
 
 int peak_usage;
 int avg_usage;
-unsigned long mem_total, mem_free, mem_used;
+unsigned long mem_total, mem_free_beg, mem_free_end, mem_used;
 
 extern void* monitor_cpu_usage(void* arg);
 
 volatile bool keep_running = true;
+
+void get_memory_usage(unsigned long* total, unsigned long* free) {
+    FILE* file = fopen("/proc/meminfo", "r");
+    if (!file) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), file)) {
+        if (sscanf(buffer, "MemTotal: %lu kB", total) == 1 ||
+            sscanf(buffer, "MemFree: %lu kB", free) == 1) {
+            // Do nothing, just parsing
+        }
+    }
+
+    fclose(file);
+}
+    
+
+////////////////////
 
 //////////////////////////////////////////////////////////////////////////////
 // - - - - - - - - - - - - - - D E C O M P R E S S O R - - - - - - - - - - - -
@@ -368,7 +389,12 @@ int32_t main(int argc, char *argv[]){
   clock_t     stop = 0, start = clock();
 
   ////////////////////////////////////////////////////////////////////////////
-  ///////////-----------C P U USAGE ---------------------------------------//
+  ///////////----------- C P U USAGE and MEMORY ----------------------------//
+
+  //////// MEMORY USAGE /////////////////////
+  get_memory_usage(&mem_total, &mem_free_beg);
+  ///////////////////////////////////////////
+
 
   pthread_t monitor_thread;
 
@@ -490,8 +516,15 @@ int32_t main(int argc, char *argv[]){
   printf("\nAvg CPU Usage: %d%%\n", avg_usage);
 
   ///////////////////////////////
-  mem_used = mem_total - mem_free;
+  get_memory_usage(&mem_total, &mem_free_end);
+  if(mem_free_beg > mem_free_end){
+    mem_used = (mem_free_beg - mem_free_end);
+  }
+  else{
+    mem_used = 0;
+  }
   printf("Memory Usage: %lu kB used out of %lu kB\n", mem_used, mem_total);
+  printf("Total %lu, beg: %lu, end: %lu", mem_total, mem_free_beg, mem_free_end);
   //////////////////////////////
 
   //////////////////////////////
