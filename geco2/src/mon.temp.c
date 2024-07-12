@@ -63,8 +63,18 @@ void get_process_info(const char* process_name) {
     char pid[16];
 
     // Step 1: Find the PID of the process
+    
+    //snprintf(cmd, sizeof(cmd), "pgrep -f \"%s\"", process_name);      // works but if process name mismatches still gives no error (pgrep or popen err m.p.)
+    //snprintf(cmd, sizeof(cmd), "ps -eo pid,comm | grep -w \"%s\" | awk '{print $1}' | head -n 1", process_name);
     //snprintf(cmd, sizeof(cmd), "ps aux | grep -w \"%s\" | grep -v grep | awk '{print $2}' | head -n 1", process_name);      //works flawlessly
-    snprintf(cmd, sizeof(cmd), "ps -eo pid,args | grep -w \"%s\" | grep -v grep | awk '{print $1}' | head -n 1", process_name); //works flawlessly
+    //snprintf(cmd, sizeof(cmd), "ps -A | grep -w \"%s\" | awk '{print $1}' | head -n 1", process_name);
+    //snprintf(cmd, sizeof(cmd), "pgrep -x \"%s\"", process_name);
+    //snprintf(cmd, sizeof(cmd), "ps -e | grep -w \"%s\" | awk '{print $1}' | head -n 1", process_name);
+    //snprintf(cmd, sizeof(cmd), "pgrep -u $(whoami) -x \"%s\"", process_name);
+    //snprintf(cmd, sizeof(cmd), "ps -eo pid,args | grep -w \"%s\" | grep -v grep | awk '{print $1}' | head -n 1", process_name); //works flawlessly
+    //snprintf(cmd, sizeof(cmd), "ps -C \"%s\" -o pid= | head -n 1", process_name);
+    //snprintf(cmd, sizeof(cmd), "ps -eo pid,comm | grep -i -w \"%s\" | awk '{print $1}' | head -n 1", process_name);
+    //snprintf(cmd, sizeof(cmd), "pgrep -f -u $(whoami) \"%s\"", process_name);  //same error with wrong process name
 
     fp = popen(cmd, "r");
     if (fp == NULL) {
